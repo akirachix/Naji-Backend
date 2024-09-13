@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'farmer',
     'authentication',
     'user',
+    'pestincident',
     'rest_framework',
     'django.contrib.sites',
     'allauth',

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from pestincident.models import PestIncident
 from farmer.models import Farmer
 from pest .models import Pest
 from user .models import User 
@@ -35,4 +36,11 @@ class FarmerSerializer(serializers.ModelSerializer):
 class PestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pest
+        fields = "__all__"
+from rest_framework import serializers
+from pestincident.models import PestIncident
+
+class Pest_IncidentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PestIncident
         fields = "__all__"

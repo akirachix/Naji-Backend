@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.views import APIView
+from pestincident.models import PestIncident
+from .serializers import Pest_IncidentSerializer
 from farmer.models import Farmer
 from .serializers import FarmerSerializer
 from rest_framework.response import Response
@@ -159,3 +161,43 @@ class PestDetailView(APIView):
         pest = PestSerializer.objects.get(id=id)
         pest.delete()
         return Response("Successfully deleted",status=status.HTTP_202_ACCEPTED)
+
+
+class Pest_IncidentDetailView(APIView):
+    def get(self, request, id):
+        try:
+            pest_incident = PestIncident.objects.get(id=id)
+        except pest_incident.DoesNotExist:
+            return Response({'error': 'Pest not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = Pest_IncidentSerializer(pest_incident)
+        return Response(serializer.data)
+    def put(self, request, id):
+        try:
+            pest_incident = PestIncident.objects.get(id=id)
+        except pest_incident.DoesNotExist:
+            return Response({'error': 'pest_incident not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = Pest_IncidentSerializer(pest_incident, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id):
+        try:
+            pest_incident = PestIncident.objects.get(id=id)
+        except PestIncident.DoesNotExist:
+            return Response({'error': 'Pest_Incident not found'}, status=status.HTTP_404_NOT_FOUND)
+        pest_incident.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+class Pest_IncidentListView(APIView):
+    def get(self, request):
+        pest_incident = PestIncident.objects.all()
+        serializer = Pest_IncidentSerializer(pest_incident, many=True)
+        return Response(serializer.data)
+    def post(self, request):
+        serializer = Pest_IncidentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

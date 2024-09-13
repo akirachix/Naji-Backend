@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from farmer.models import Farmer
+from pest .models import Pest
 from user .models import User 
 from django.contrib.auth.models import User as DjangoUser
 class UserSerializer(serializers.ModelSerializer):
@@ -24,3 +26,13 @@ class UserSerializer(serializers.ModelSerializer):
 class RoleSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     # role = serializers.ChoiceField(choices=User.ROLE_CHOICES)
+
+class FarmerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Farmer
+        fields = "__all__"
+
+class PestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pest
+        fields = "__all__"

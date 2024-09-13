@@ -8,6 +8,14 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.views import APIView
+from farmer.models import Farmer
+from .serializers import FarmerSerializer
+from rest_framework.response import Response
+from pest.models import Pest
+from .serializers import PestSerializer
+from pest.models import Pest
+from rest_framework import status
 from user.models import User
 from .serializers import UserSerializer, RoleSerializer
 from django.contrib.auth import authenticate
@@ -85,3 +93,69 @@ class RoleBasedView(APIView):
         else:
             logger.error(f'Invalid role update data: {serializer.errors}')
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FarmerListView(APIView):
+    def get(self, request):
+        farmer = Farmer.objects.all()
+        serializer = FarmerSerializer(farmer, many=True)
+        return Response(serializer.data)
+    def post(self, request):
+        serializer = FarmerSerializer(data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status= status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        
+class FarmerDetailView(APIView):
+    def get(self,request,id):
+        farmer = Farmer.objects.get(id=id)
+        serializer = FarmerSerializer(farmer)
+        return Response(serializer.data)
+    def put(self, request, id):
+        farmer = Farmer.objects.get(id=id)
+        serializer = FarmerSerializer(farmer, data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, data=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, id):
+        farmer = FarmerSerializer.objects.get(id=id)
+        farmer.delete()
+        return Response("Successfully deleted",status=status.HTTP_202_ACCEPTED)
+        
+class PestListView(APIView):
+    def get(self, request):
+        farmer = Farmer.objects.all()
+        serializer = FarmerSerializer(farmer, many=True)
+        return Response(serializer.data)
+    def post(self, request):
+        serializer = FarmerSerializer(data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status= status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        
+class PestDetailView(APIView):
+    def get(self,request,id):
+        pest = Pest.objects.get(id=id)
+        serializer = PestSerializer(pest)
+        return Response(serializer.data)
+    
+    def put(self, request, id):
+        pest = Pest.objects.get(id=id)
+        serializer = PestSerializer(pest, data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, data=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, id):
+        pest = PestSerializer.objects.get(id=id)
+        pest.delete()
+        return Response("Successfully deleted",status=status.HTTP_202_ACCEPTED)

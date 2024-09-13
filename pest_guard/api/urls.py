@@ -6,6 +6,9 @@ from .views import PestListView
 from .views import PestDetailView
 from .views import Pest_IncidentListView
 from .views import Pest_IncidentDetailView
+from .views import RecommendListView
+from.views import RecommendDetailView
+
 
 urlpatterns = [
     path('users/', UserListView.as_view(), name='user-list'),
@@ -18,7 +21,13 @@ urlpatterns = [
     path("pest/" , PestDetailView.as_view(), name="pest_detail_view"),
      path('pestincident/', Pest_IncidentListView.as_view(), name='pest_incident-list'),
     path('pestincident/', Pest_IncidentDetailView.as_view(), name='pest_incident-detail'),
+    path('recommendation/', RecommendListView.as_view(), name='recommend-list'),
+    path('recommendation/<int:id>/', RecommendDetailView.as_view(), name='recommend-detail'),
 ]
+
+
+
+
 
 
 

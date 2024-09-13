@@ -4,6 +4,8 @@ from farmer.models import Farmer
 from pest .models import Pest
 from user .models import User 
 from django.contrib.auth.models import User as DjangoUser
+from recommend.models import Recommend 
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
     class Meta:
@@ -37,10 +39,14 @@ class PestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pest
         fields = "__all__"
-from rest_framework import serializers
-from pestincident.models import PestIncident
+
 
 class Pest_IncidentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PestIncident
         fields = "__all__"
+
+class RecommendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recommend
+        fields = '__all__'

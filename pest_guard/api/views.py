@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
-
-from django.shortcuts import render
+from recommend.models import Recommend
+from .serializers import RecommendSerializer
 import logging
 from rest_framework import status
 from rest_framework.response import Response
@@ -196,6 +196,56 @@ class Pest_IncidentListView(APIView):
         return Response(serializer.data)
     def post(self, request):
         serializer = Pest_IncidentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class RecommendDetailView(APIView):
+    def get(self, request, id):
+        try:
+            recommend = Recommend.objects.get(id=id)
+        except Recommend.DoesNotExist:
+            return Response({'error': 'Recommendation not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = RecommendSerializer(recommend)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        try:
+            recommend = Recommend.objects.get(id=id)
+        except Recommend.DoesNotExist:
+            return Response({'error': 'Recommendation not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = RecommendSerializer(recommend, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        try:
+            recommend = Recommend.objects.get(id=id)
+        except Recommend.DoesNotExist:
+            return Response({'error': 'Recommendation not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        recommend.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class RecommendListView(APIView):
+    def get(self, request):
+        recommend = Recommend.objects.all()
+        serializer = RecommendSerializer(recommend, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = RecommendSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

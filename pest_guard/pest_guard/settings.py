@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'api',
     'pest',
     'farmer',
+    'recommend',
     'authentication',
     'user',
     'pestincident',

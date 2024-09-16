@@ -12,33 +12,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Check out repository code
         uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.10.12'
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-      - name: Check code formatting with Black
-        id: action_black
-        run: |
-          black .
-      - name: List files
-        run: ls -R
+        run: pip install -r requirements.txt
       - name: Run migrations
-        run: |
-          python manage.py migrate
+        run:
+             python3 manage.py migrate
       - name: Run tests
+        run:  python3 manage.py test
+      - name: format using Black
         run: |
-          python manage.py test
-          
-      - name: Install Black
-        run: |
-          pip install black
-
-      - name: Format code with black
-        run: |
-         black .
+           black.
       

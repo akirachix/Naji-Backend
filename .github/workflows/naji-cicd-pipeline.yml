@@ -27,6 +27,12 @@ jobs:
       - name: Run tests
         run: |
           python manage.py test
+          
+      - name: Install Black
+        run: |
+          pip install black
+
       - name: Format code with black
         run: |
          black .
+      

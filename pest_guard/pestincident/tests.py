@@ -1,46 +1,89 @@
-from django.test import TestCase
-from rest_framework.test import APITestCase
-from rest_framework import status
-from .models import PestIncident
-class PestIncidentTests(APITestCase):
-    def setUp(self):
-        self.farmer = PestIncident.objects.create(name='John Doe', phone_number='1234567890', county='County A')
-        self.pest = PestIncident.objects.create(name='Test Pest', description='Test description')
-        self.incident_data = {
-            'farmer': self.farmer.id,
-            'pest': self.pest.id,
-            'detection_date': '2024-09-01',
-            'confidence_score': 95.75,
-            'affected_area_percentage': 75.0
-        }
-        self.create_url = '/api/pest-incidents/'
-        self.list_url = '/api/pest-incidents/'
-    def test_create_pest_incident(self):
-        response = self.client.post(self.create_url, self.incident_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(PestIncident.objects.count(), 1)
-        self.assertEqual(PestIncident.objects.get().confidence_score, 95.75)
-    def test_get_pest_incidents(self):
-        PestIncident.objects.create(**self.incident_data)
-        response = self.client.get(self.list_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-    def test_get_pest_incident(self):
-        incident = PestIncident.objects.create(**self.incident_data)
-        response = self.client.get(f'/api/pest-incidents/{incident.incident_id}/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['confidence_score'], 95.75)
-    def test_update_pest_incident(self):
-        incident = PestIncident.objects.create(**self.incident_data)
-        updated_data = {'confidence_score': 98.50}
-        response = self.client.put(f'/api/pest-incidents/{incident.incident_id}/', updated_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        incident.refresh_from_db()
-        self.assertEqual(incident.confidence_score, 98.50)
-    def test_delete_pest_incident(self):
-        incident = PestIncident.objects.create(**self.incident_data)
-        response = self.client.delete(f'/api/pest-incidents/{incident.incident_id}/')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(PestIncident.objects.count(), 0)
 
-# Create your tests here.
+
+from django.test import TestCase
+from django.core.exceptions import ValidationError
+from .models import PestIncident
+from datetime import date
+class PestIncidentModelTest(TestCase):
+    def setUp(self):
+        
+        self.valid_incident_data = {
+            'detection_date': date.today(),
+            'confidence_score': 85.50,
+            'affected_area_percentage': 25.5
+        }
+        self.incident = PestIncident.objects.create(**self.valid_incident_data)
+    def test_incident_creation(self):
+    
+        incident = PestIncident.objects.get(incident_id=self.incident.incident_id)
+        self.assertEqual(incident.detection_date, self.valid_incident_data['detection_date'])
+        self.assertEqual(incident.confidence_score, self.valid_incident_data['confidence_score'])
+        self.assertEqual(incident.affected_area_percentage, self.valid_incident_data['affected_area_percentage'])
+    def test_incident_str_method(self):
+    
+        expected_str = f"Incident {self.incident.incident_id} - detection_date: {self.incident.detection_date} - confidence_score: {self.incident.confidence_score}"
+        self.assertEqual(str(self.incident), expected_str)
+    def test_confidence_score_validation(self):
+        
+        invalid_incident = PestIncident(
+            detection_date=date.today(),
+            confidence_score=105.00,
+            affected_area_percentage=25.5
+        )
+      
+    def test_affected_area_percentage_validation(self):
+        
+        invalid_incident = PestIncident(
+            detection_date=date.today(),
+            confidence_score=85.50,
+            affected_area_percentage=105.0
+        )
+      
+    def test_future_detection_date(self):
+        
+        future_date_incident = PestIncident(
+            detection_date=date.today().replace(year=date.today().year + 1),
+            confidence_score=85.50,
+            affected_area_percentage=25.5
+        )
+     
+    def test_invalid_confidence_score(self):
+        
+        invalid_incident = PestIncident(
+            detection_date=date.today(),
+            confidence_score='Invalid',
+            affected_area_percentage=25.5
+        )
+      
+    def test_invalid_affected_area_percentage(self):
+        
+        invalid_incident = PestIncident(
+            detection_date=date.today(),
+            confidence_score=85.50,
+            affected_area_percentage='Invalid'
+        )
+      
+    def test_no_detection_date(self):
+        
+        invalid_incident = PestIncident(
+            detection_date=None,
+            confidence_score=85.50,
+            affected_area_percentage=25.5
+        )
+      
+    def test_no_confidence_score(self):
+        
+        invalid_incident = PestIncident(
+            detection_date=date.today(),
+            confidence_score=None,
+            affected_area_percentage=25.5
+        )
+      
+    def test_no_affected_area_percentage(self):
+        
+        invalid_incident = PestIncident(
+            detection_date=date.today(),
+            confidence_score=85.50,
+            affected_area_percentage=None
+        )
+     

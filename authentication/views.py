@@ -44,6 +44,15 @@ def logout(request):
             quote_via=quote_plus,
         ),
     )
+def index(request):
+    return render(
+        request,
+        "login/index.html",
+        context={
+            "session": request.session.get("user"),
+            "pretty": json.dumps(request.session.get("user"), indent=4),
+        },
+    )
 
 
 

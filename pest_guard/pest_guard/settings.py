@@ -167,4 +167,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
 AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID")
 AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET")
+<<<<<<< HEAD
 REDIRECT_URI=  os.environ.get("REDIRECT_URI", '')
+=======
+
+
+REDIRECT_URI = 'http://localhost:8000/auth/callback'
+
+>>>>>>> origin/feature/deployment

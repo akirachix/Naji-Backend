@@ -170,4 +170,4 @@ AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET")
 
 
 REDIRECT_URI = 'http://localhost:8000/auth/callback'
-REDIRECT_URI= 'http://localhost:8000/auth/'
+

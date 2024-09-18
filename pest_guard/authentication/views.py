@@ -48,7 +48,7 @@ def logout(request):
 def index(request):
     return render(
         request,
-        "authentication/index.html",
+        "login/index.html",
         context={
             "session": request.session.get("user"),
             "pretty": json.dumps(request.session.get("user"), indent=4),

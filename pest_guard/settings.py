@@ -17,6 +17,8 @@ ENV_FILE = Path(__file__).resolve().parent / '.env'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATE_DIR =os.path.join(BASE_DIR, "Naji", "template")
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -42,6 +44,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'api',
+    'user',
+    'farmer',
+    'recommend',
+    'pestincident',
+    'rest_framework',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialacount.providers.google',
     
 ]
 
@@ -53,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'pest_guard.urls'
@@ -60,7 +73,7 @@ ROOT_URLCONF = 'pest_guard.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

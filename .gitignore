@@ -36,6 +36,7 @@ nosetests.xml
 coverage.xml
 *.cover
 *.py,cover
+REDIRECT_URI= 'http://localhost:8000/auth/'
 # Windows
 Thumbs.db
 Desktop.ini

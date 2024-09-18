@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import render
 import json
+from django.shortcuts import render
 from authlib.integrations.django_client import OAuth
 from django.conf import settings
 from django.shortcuts import redirect, render, redirect
@@ -45,12 +45,5 @@ def logout(request):
         ),
     )
 
-def index(request):
-    return render(
-        request,
-        "login/index.html",
-        context={
-            "session": request.session.get("user"),
-            "pretty": json.dumps(request.session.get("user"), indent=4),
-        },
-    )
+
+

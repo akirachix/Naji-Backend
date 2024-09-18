@@ -61,6 +61,8 @@ staticfiles/
 # Python Bytecode Files
 __pycache__/
 *.py[cod]
+REDIRECT_URI= 'http://localhost:8000/auth/'
+
 
 
 

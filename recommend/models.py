@@ -11,3 +11,5 @@ class Recommend(models.Model):
         return f"{self.recommendation_id} {self.recommendation_text} {self.created_at}"
 
 # Create your models here.
+
+

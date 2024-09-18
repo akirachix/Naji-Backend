@@ -102,6 +102,8 @@ class FarmerListView(APIView):
         farmer = Farmer.objects.all()
         serializer = FarmerSerializer(farmer, many=True)
         return Response(serializer.data)
+
+
     def post(self, request):
         serializer = FarmerSerializer(data= request.data)
         if serializer.is_valid():
@@ -134,6 +136,7 @@ class PestListView(APIView):
         farmer = Farmer.objects.all()
         serializer = FarmerSerializer(farmer, many=True)
         return Response(serializer.data)
+        
     def post(self, request):
         serializer = FarmerSerializer(data= request.data)
         if serializer.is_valid():

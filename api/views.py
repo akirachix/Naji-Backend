@@ -76,25 +76,6 @@ class LoginView(APIView):
             return Response({}, status=status.HTTP_200_OK)
         logger.error(f'Login failed for user: {email}')
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-class RoleBasedView(APIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
-    def post(self, request):
-        serializer = RoleSerializer(data=request.data)
-        if serializer.is_valid():
-            user_id = serializer.validated_data['user_id']
-            new_role = serializer.validated_data['role']
-            try:
-                user = User.objects.get(id=user_id)
-                user.role = new_role
-                user.save()
-                logger.info(f'Role updated for user {user.email}: {new_role}')
-                return Response({"detail": f"Role updated to {new_role} for user successfully"}, status=status.HTTP_200_OK)
-            except User.DoesNotExist:
-                logger.error(f'User with ID {user_id} not found')
-                return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            logger.error(f'Invalid role update data: {serializer.errors}')
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class FarmerListView(APIView):
@@ -117,6 +98,7 @@ class FarmerDetailView(APIView):
         farmer = Farmer.objects.get(id=id)
         serializer = FarmerSerializer(farmer)
         return Response(serializer.data)
+        
     def put(self, request, id):
         farmer = Farmer.objects.get(id=id)
         serializer = FarmerSerializer(farmer, data= request.data)
@@ -125,11 +107,9 @@ class FarmerDetailView(APIView):
             return Response(serializer.data, data=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    def delete(self, request, id):
-        farmer = FarmerSerializer.objects.get(id=id)
-        farmer.delete()
-        return Response("Successfully deleted",status=status.HTTP_202_ACCEPTED)
+     
+
+  
         
 class PestListView(APIView):
     def get(self, request):
@@ -151,19 +131,21 @@ class PestDetailView(APIView):
         serializer = PestSerializer(pest)
         return Response(serializer.data)
     
-    def put(self, request, id):
-        pest = Pest.objects.get(id=id)
-        serializer = PestSerializer(pest, data= request.data)
+
+
+    def post(self, request):
+        serializer = Pest_IncidentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, data=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         
-    def delete(self, request, id):
-        pest = PestSerializer.objects.get(id=id)
-        pest.delete()
-        return Response("Successfully deleted",status=status.HTTP_202_ACCEPTED)
+
+
+ 
+
 
 
 class Pest_IncidentDetailView(APIView):
@@ -174,36 +156,27 @@ class Pest_IncidentDetailView(APIView):
             return Response({'error': 'Pest not found'}, status=status.HTTP_404_NOT_FOUND)
         serializer = Pest_IncidentSerializer(pest_incident)
         return Response(serializer.data)
-    def put(self, request, id):
-        try:
-            pest_incident = PestIncident.objects.get(id=id)
-        except pest_incident.DoesNotExist:
-            return Response({'error': 'pest_incident not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = Pest_IncidentSerializer(pest_incident, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    def delete(self, request, id):
-        try:
-            pest_incident = PestIncident.objects.get(id=id)
-        except PestIncident.DoesNotExist:
-            return Response({'error': 'Pest_Incident not found'}, status=status.HTTP_404_NOT_FOUND)
-        pest_incident.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+   
+   
 class Pest_IncidentListView(APIView):
     def get(self, request):
         pest_incident = PestIncident.objects.all()
         serializer = Pest_IncidentSerializer(pest_incident, many=True)
         return Response(serializer.data)
+
     def post(self, request):
         serializer = Pest_IncidentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:'allauth.account.middleware.AccountMiddleware',
+        else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
 
 
 
@@ -218,6 +191,7 @@ class RecommendDetailView(APIView):
         serializer = RecommendSerializer(recommend)
         return Response(serializer.data)
 
+
     def put(self, request, id):
         try:
             recommend = Recommend.objects.get(id=id)
@@ -231,14 +205,7 @@ class RecommendDetailView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, id):
-        try:
-            recommend = Recommend.objects.get(id=id)
-        except Recommend.DoesNotExist:
-            return Response({'error': 'Recommendation not found'}, status=status.HTTP_404_NOT_FOUND)
-        
-        recommend.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+  
 
 
 class RecommendListView(APIView):

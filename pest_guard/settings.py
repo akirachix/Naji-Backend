@@ -32,8 +32,6 @@ SECRET_KEY = 'django-insecure-+z)#(dxlv9do50)jjomgkj1+#0h$3_y4_ny$_v$mv0^ryf_8xk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
-
 
 # Application definition
 
@@ -175,7 +173,4 @@ AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET")
 
 REDIRECT_URI = 'http://127.0.0.1:8000/auth//callback'
 REDIRECT_URI= 'http://127.0.0.1:8000/auth/'
-
-
-
 ALLOWED_HOSTS = ["*"]

@@ -98,7 +98,7 @@ class FarmerDetailView(APIView):
         farmer = Farmer.objects.get(id=id)
         serializer = FarmerSerializer(farmer)
         return Response(serializer.data)
-        
+
     def put(self, request, id):
         farmer = Farmer.objects.get(id=id)
         serializer = FarmerSerializer(farmer, data= request.data)

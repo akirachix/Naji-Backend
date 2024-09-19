@@ -104,12 +104,9 @@ class FarmerDetailView(APIView):
         serializer = FarmerSerializer(farmer, data= request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, data=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-     
-
-  
         
 class PestListView(APIView):
     def get(self, request):
@@ -142,11 +139,6 @@ class PestDetailView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         
-
-
- 
-
-
 
 class Pest_IncidentDetailView(APIView):
     def get(self, request, id):
@@ -221,3 +213,5 @@ class RecommendListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+

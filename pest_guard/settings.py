@@ -32,6 +32,7 @@ SECRET_KEY = 'django-insecure-+z)#(dxlv9do50)jjomgkj1+#0h$3_y4_ny$_v$mv0^ryf_8xk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -166,11 +167,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
-AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID")
-AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET")
+AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN", "")
+AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID", "")
+AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET", "")
 
-REDIRECT_URI = 'http://127.0.0.1:8000/auth//callback'
-REDIRECT_URI= 'http://127.0.0.1:8000/auth/'
-ALLOWED_HOSTS = ["*"]
+REDIRECT_URI = os.environ.get("REDIRECT_URI","")

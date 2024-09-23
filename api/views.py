@@ -110,12 +110,12 @@ class FarmerDetailView(APIView):
         
 class PestListView(APIView):
     def get(self, request):
-        farmer = Farmer.objects.all()
-        serializer = FarmerSerializer(farmer, many=True)
+        pest = Pest.objects.all()
+        serializer = PestSerializer(pest, many=True)
         return Response(serializer.data)
         
     def post(self, request):
-        serializer = FarmerSerializer(data= request.data)
+        serializer = PestSerializer(data= request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status= status.HTTP_201_CREATED)
@@ -131,7 +131,7 @@ class PestDetailView(APIView):
 
 
     def post(self, request):
-        serializer = Pest_IncidentSerializer(data=request.data)
+        serializer = PestSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

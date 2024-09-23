@@ -9,4 +9,3 @@ class Pest(models.Model):
     def __str__(self):
         return f"{self.pest_name}"
 
-# Create your models here.

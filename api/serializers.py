@@ -33,7 +33,7 @@ class RoleSerializer(serializers.Serializer):
 class FarmerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farmer
-        fields = "__all__"
+        fields = ['farmer_id', 'farmer_name', 'farmer_county', 'farmer_phone_number']
 
 class PestSerializer(serializers.ModelSerializer):
     class Meta:

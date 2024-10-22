@@ -176,14 +176,6 @@ class DeviceDetailView(APIView):
 
 
 
-
-
-
-
-
-
-
-
 class Pest_IncidentDetailView(APIView):
     def get(self, request, id):
         try:

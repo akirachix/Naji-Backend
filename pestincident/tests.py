@@ -1,89 +1,71 @@
-
-
 from django.test import TestCase
+from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from .models import PestIncident
 from datetime import date
+
 class PestIncidentModelTest(TestCase):
+
     def setUp(self):
-        
-        self.valid_incident_data = {
-            'detection_date': date.today(),
-            'confidence_score': 85.50,
-            'affected_area_percentage': 25.5
-        }
-        self.incident = PestIncident.objects.create(**self.valid_incident_data)
-    def test_incident_creation(self):
-    
-        incident = PestIncident.objects.get(incident_id=self.incident.incident_id)
-        self.assertEqual(incident.detection_date, self.valid_incident_data['detection_date'])
-        self.assertEqual(incident.confidence_score, self.valid_incident_data['confidence_score'])
-        self.assertEqual(incident.affected_area_percentage, self.valid_incident_data['affected_area_percentage'])
-    def test_incident_str_method(self):
-    
-        expected_str = f"Incident {self.incident.incident_id} - detection_date: {self.incident.detection_date} - confidence_score: {self.incident.confidence_score}"
-        self.assertEqual(str(self.incident), expected_str)
-    def test_confidence_score_validation(self):
-        
-        invalid_incident = PestIncident(
-            detection_date=date.today(),
-            confidence_score=105.00,
-            affected_area_percentage=25.5
+        # Setting up data for the happy path test
+        self.pest_incident = PestIncident.objects.create(
+            leaf_status="Healthy",
+            affected_area_percentage=20.5,
+            confidence_score=0.9,
+            detection_date=date.today()
         )
-      
-    def test_affected_area_percentage_validation(self):
-        
-        invalid_incident = PestIncident(
-            detection_date=date.today(),
-            confidence_score=85.50,
-            affected_area_percentage=105.0
+
+    def test_pestincident_creation_happy_path(self):
+        """
+        Happy Path: Test if the PestIncident is created successfully
+        """
+        incident = PestIncident.objects.get(incident_id=self.pest_incident.incident_id)
+        self.assertEqual(incident.leaf_status, "Healthy")
+        self.assertEqual(incident.affected_area_percentage, 20.5)
+        self.assertEqual(incident.confidence_score, 0.9)
+        self.assertEqual(incident.detection_date, date.today())
+
+    def test_pestincident_creation_unhappy_path_missing_leaf_status(self):
+        """
+        Unhappy Path: Missing leaf_status should raise an IntegrityError
+        """
+        with self.assertRaises(IntegrityError):
+            PestIncident.objects.create(
+                affected_area_percentage=15.0,
+                confidence_score=0.8,
+                detection_date=date.today()
+            )
+
+    def test_pestincident_creation_unhappy_path_negative_percentage(self):
+        """
+        Unhappy Path: Negative affected_area_percentage should raise a ValidationError
+        """
+        incident = PestIncident(
+            leaf_status="Infected",
+            affected_area_percentage=-5.0,  # Invalid value
+            confidence_score=0.85,
+            detection_date=date.today()
         )
-      
-    def test_future_detection_date(self):
-        
-        future_date_incident = PestIncident(
-            detection_date=date.today().replace(year=date.today().year + 1),
-            confidence_score=85.50,
-            affected_area_percentage=25.5
+        with self.assertRaises(ValidationError):
+            incident.full_clean()  # Call validation explicitly to trigger ValidationError
+
+    def test_pestincident_creation_unhappy_path_missing_confidence_score(self):
+        """
+        Unhappy Path: Missing confidence_score should raise an IntegrityError
+        """
+        with self.assertRaises(IntegrityError):
+            PestIncident.objects.create(
+                leaf_status="Infected",
+                affected_area_percentage=10.0,
+                detection_date=date.today()
+            )
+
+    def test_str_method(self):
+        """
+        Test the __str__ method of PestIncident
+        """
+        self.assertEqual(
+            str(self.pest_incident),
+            f"Incident {self.pest_incident.incident_id} - detection_date: {self.pest_incident.detection_date} - confidence_score: {self.pest_incident.confidence_score}"
         )
-     
-    def test_invalid_confidence_score(self):
-        
-        invalid_incident = PestIncident(
-            detection_date=date.today(),
-            confidence_score='Invalid',
-            affected_area_percentage=25.5
-        )
-      
-    def test_invalid_affected_area_percentage(self):
-        
-        invalid_incident = PestIncident(
-            detection_date=date.today(),
-            confidence_score=85.50,
-            affected_area_percentage='Invalid'
-        )
-      
-    def test_no_detection_date(self):
-        
-        invalid_incident = PestIncident(
-            detection_date=None,
-            confidence_score=85.50,
-            affected_area_percentage=25.5
-        )
-      
-    def test_no_confidence_score(self):
-        
-        invalid_incident = PestIncident(
-            detection_date=date.today(),
-            confidence_score=None,
-            affected_area_percentage=25.5
-        )
-      
-    def test_no_affected_area_percentage(self):
-        
-        invalid_incident = PestIncident(
-            detection_date=date.today(),
-            confidence_score=85.50,
-            affected_area_percentage=None
-        )
-     
+

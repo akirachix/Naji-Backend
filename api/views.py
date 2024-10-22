@@ -1,6 +1,4 @@
 from django.shortcuts import render
-
-# Create your views here.
 from recommend.models import Recommend
 from .serializers import RecommendSerializer
 import logging
@@ -17,12 +15,16 @@ from rest_framework.response import Response
 from pest.models import Pest
 from .serializers import PestSerializer
 from pest.models import Pest
+from device.models import Device
+from .serializers import DeviceSerializer
+from device.models import Device
 from rest_framework import status
 from user.models import User
 from .serializers import UserSerializer, RoleSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 logger = logging.getLogger(__name__)
+
 class UserListView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
@@ -137,8 +139,50 @@ class PestDetailView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
         
+
+
+
+
+class DeviceListView(APIView):
+    def get(self, request):
+        pest = Device.objects.all()
+        serializer = DeviceSerializer(pest, many=True)
+        return Response(serializer.data)
+        
+    def post(self, request):
+        serializer = DeviceSerializer(data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status= status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        
+class DeviceDetailView(APIView):
+    def get(self,request,id):
+        pest = Device.objects.get(id=id)
+        serializer = DeviceSerializer(pest)
+        return Response(serializer.data)
+    
+
+
+    def post(self, request):
+        serializer = DeviceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
 
 class Pest_IncidentDetailView(APIView):
     def get(self, request, id):
@@ -163,11 +207,6 @@ class Pest_IncidentListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
 
 
 

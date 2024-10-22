@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'pest',
     'pestincident',
     'recommend',
+    'device',
     
 ]
 
@@ -128,6 +129,7 @@ if not os.getenv("DATABASE_URL"):
         }
     }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -172,7 +174,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN", "")
 AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID", "")
 AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET", "")
-
 REDIRECT_URI = os.environ.get("REDIRECT_URI","")
 
 

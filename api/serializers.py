@@ -2,6 +2,7 @@ from rest_framework import serializers
 from pestincident.models import PestIncident
 from farmer.models import Farmer
 from pest .models import Pest
+from device .models import Device
 from user .models import User 
 from django.contrib.auth.models import User as DjangoUser
 from recommend.models import Recommend 
@@ -39,6 +40,12 @@ class PestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pest
         fields = "__all__"
+        
+class DeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Device
+        fields = "__all__"
+
 
 
 class Pest_IncidentSerializer(serializers.ModelSerializer):

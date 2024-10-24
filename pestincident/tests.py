@@ -7,7 +7,6 @@ from datetime import date
 class PestIncidentModelTest(TestCase):
 
     def setUp(self):
-        # Setting up data for the happy path test
         self.pest_incident = PestIncident.objects.create(
             leaf_status="Healthy",
             affected_area_percentage=20.5,
@@ -16,9 +15,7 @@ class PestIncidentModelTest(TestCase):
         )
 
     def test_pestincident_creation_happy_path(self):
-        """
-        Happy Path: Test if the PestIncident is created successfully
-        """
+        
         incident = PestIncident.objects.get(incident_id=self.pest_incident.incident_id)
         self.assertEqual(incident.leaf_status, "Healthy")
         self.assertEqual(incident.affected_area_percentage, 20.5)
@@ -37,17 +34,15 @@ class PestIncidentModelTest(TestCase):
             )
 
     def test_pestincident_creation_unhappy_path_negative_percentage(self):
-        """
-        Unhappy Path: Negative affected_area_percentage should raise a ValidationError
-        """
+       
         incident = PestIncident(
             leaf_status="Infected",
-            affected_area_percentage=-5.0,  # Invalid value
+            affected_area_percentage=-5.0,  
             confidence_score=0.85,
             detection_date=date.today()
         )
         with self.assertRaises(ValidationError):
-            incident.full_clean()  # Call validation explicitly to trigger ValidationError
+            incident.full_clean()  
 
     def test_pestincident_creation_unhappy_path_missing_confidence_score(self):
         """
@@ -61,9 +56,7 @@ class PestIncidentModelTest(TestCase):
             )
 
     def test_str_method(self):
-        """
-        Test the __str__ method of PestIncident
-        """
+      
         self.assertEqual(
             str(self.pest_incident),
             f"Incident {self.pest_incident.incident_id} - detection_date: {self.pest_incident.detection_date} - confidence_score: {self.pest_incident.confidence_score}"

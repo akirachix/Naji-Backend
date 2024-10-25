@@ -1,60 +1,54 @@
 from django.test import TestCase
-from django.db import IntegrityError
-from django.core.exceptions import ValidationError
 from .models import PestIncident
+from django.core.exceptions import ValidationError
 from datetime import date
 
-class PestIncidentModelTest(TestCase):
+class PestIncidentModelTests(TestCase):
 
-    def setUp(self):
-        self.pest_incident = PestIncident.objects.create(
-            leaf_status="Healthy",
-            affected_area_percentage=20.5,
-            confidence_score=0.9,
+    def test_create_valid_pest_incident(self):
+        incident = PestIncident.objects.create(
+            leaf_status='Healthy',
+            affected_area_percentage=0.0,
             detection_date=date.today()
         )
-
-    def test_pestincident_creation_happy_path(self):
-        
-        incident = PestIncident.objects.get(incident_id=self.pest_incident.incident_id)
-        self.assertEqual(incident.leaf_status, "Healthy")
-        self.assertEqual(incident.affected_area_percentage, 20.5)
-        self.assertEqual(incident.confidence_score, 0.9)
+        self.assertEqual(incident.leaf_status, 'Healthy')
+        self.assertEqual(incident.affected_area_percentage, 0.0)
         self.assertEqual(incident.detection_date, date.today())
 
-    def test_pestincident_creation_unhappy_path_missing_leaf_status(self):
-        
-        with self.assertRaises(IntegrityError):
-            PestIncident.objects.create(
-                affected_area_percentage=15.0,
-                confidence_score=0.8,
-                detection_date=date.today()
-            )
+    def test_str_representation(self):
+        incident = PestIncident.objects.create(
+            leaf_status='Infected',
+            affected_area_percentage=25.0,
+            detection_date=date.today()
+        )
+        self.assertEqual(str(incident), f"Incident {incident.incident_id} -leaf_status: Infected")
 
-    def test_pestincident_creation_unhappy_path_negative_percentage(self):
-       
+    def test_affected_area_percentage_validation(self):
         incident = PestIncident(
-            leaf_status="Infected",
+            leaf_status='Infected',
             affected_area_percentage=-5.0,  
-            confidence_score=0.85,
             detection_date=date.today()
         )
         with self.assertRaises(ValidationError):
             incident.full_clean()  
 
-    def test_pestincident_creation_unhappy_path_missing_confidence_score(self):
-       
-        with self.assertRaises(IntegrityError):
-            PestIncident.objects.create(
-                leaf_status="Infected",
-                affected_area_percentage=10.0,
-                detection_date=date.today()
-            )
-
-    def test_str_method(self):
-      
-        self.assertEqual(
-            str(self.pest_incident),
-            f"Incident {self.pest_incident.incident_id} - detection_date: {self.pest_incident.detection_date} - confidence_score: {self.pest_incident.confidence_score}"
+    def test_affected_area_percentage_zero(self):
+        incident = PestIncident(
+            leaf_status='Healthy',
+            affected_area_percentage=0.0,
+            detection_date=date.today()
         )
+        try:
+            incident.full_clean()  #
+        except ValidationError:
+            self.fail("ValidationError raised when affected_area_percentage is zero.")
 
+    def test_required_fields(self):
+        with self.assertRaises(ValidationError):
+            PestIncident(affected_area_percentage=10.0, detection_date=date.today()).full_clean()
+        with self.assertRaises(ValidationError):
+            PestIncident(leaf_status='Infected', affected_area_percentage=10.0).full_clean()
+        with self.assertRaises(ValidationError):
+            PestIncident(leaf_status='Infected', detection_date=date.today()).full_clean()
+
+                

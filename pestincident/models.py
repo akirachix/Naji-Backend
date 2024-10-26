@@ -9,7 +9,7 @@ class PestIncident(models.Model):
     detection_date = models.DateField()
 
     def __str__(self):
-        return f"Incident {self.incident_id} - detection_date: {self.detection_date} - confidence_score: {self.confidence_score}"
+        return f"Incident {self.incident_id} -leaf_status: {self.leaf_status}"
 
 
 

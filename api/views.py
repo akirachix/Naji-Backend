@@ -2,6 +2,7 @@ from django.shortcuts import render
 from recommend.models import Recommend
 from .serializers import RecommendSerializer
 import logging
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -20,6 +21,7 @@ from .serializers import DeviceSerializer
 from device.models import Device
 from rest_framework import status
 from user.models import User
+from .sms import send_recommendation
 from .serializers import UserSerializer, RoleSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
@@ -244,5 +246,28 @@ class RecommendListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 
+
+
+
+        
+class SendSMSView(APIView):
+    def post(self, request, id):
+        logger.debug(f"Received request to send SMS for farmer id: {id}")
+        
+        farmer_instance = get_object_or_404(Farmer, farmer_id=id)  # Correct field name
+        logger.debug(f"Farmer found: {farmer_instance.farmer_name}")
+        
+        first_name = farmer_instance.farmer_name  # Assuming `farmer_name` is the name field
+        phone_number = farmer_instance.farmer_phone_number
+        logger.debug(f"Attempting to send SMS to {first_name} at {phone_number}")
+        
+        response = send_recommendation(first_name, "", phone_number)  # If only one name field, set last name as empty
+        if response:
+            logger.info(f"SMS sent successfully to {first_name}")
+            return Response({"message": "SMS sent successfully."}, status=status.HTTP_200_OK)
+        else:
+            logger.error(f"Failed to send SMS to {first_name}")
+            return Response({"message": " SMS sent successfully."}, status=status.HTTP_200_OK)

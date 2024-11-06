@@ -10,6 +10,7 @@ from .views import Pest_IncidentListView
 from .views import Pest_IncidentDetailView
 from .views import RecommendListView
 from.views import RecommendDetailView
+from .views import SendSMSView
 
 
 urlpatterns = [
@@ -19,6 +20,7 @@ urlpatterns = [
     path('users/login/', LoginView.as_view(), name='user-login'),
      path("farmer/" ,FarmerListView.as_view(),name="farmer_list_view"),
     path("farmer/",FarmerDetailView.as_view(), name="farmer_detail_view"),
+    path('send-sms/<int:id>/', SendSMSView.as_view(), name='send_sms'),
     path("pest/" ,PestListView.as_view(),name="pests_list_view"),
     path("pest/" , PestDetailView.as_view(), name="pest_detail_view"),
     path("device/" ,DeviceListView.as_view(),name="devices_list_view"),

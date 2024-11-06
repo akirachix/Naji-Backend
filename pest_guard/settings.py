@@ -177,3 +177,5 @@ AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET", "")
 REDIRECT_URI = os.environ.get("REDIRECT_URI","")
 
 
+SMS_LEOPARD_API_URL = os.environ.get('SMS_LEOPARD_API_URL', 'https://api.smsleopard.com/v1/sms/send')
+SMS_LEOPARD_ACCESS_TOKEN = os.environ.get('SMS_LEOPARD_ACCESS_TOKEN', 'alA4aXRHVHc2OG9QUGF2a0dxYVc6M01pSldhYUhDMlF2eVdnNHdYZnpNUjMzQzZZeFNNTVUyQmN4aEhuYg==')
